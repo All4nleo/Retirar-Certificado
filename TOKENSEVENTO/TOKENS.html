@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificado - TUR'N TECH</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+    body {
+      background: url('img/even.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Tela de botão iniciar */
+    #video-start-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      color: white;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #video-start-screen button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #0055aa;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #video-start-screen button:hover {
+      background-color: #003f88;
+    }
+
+    #intro-video {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 9999;
+    }
+
+    #main-content {
+      display: none;
+      z-index: 1;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    input {
+      padding: 12px;
+      width: 80%;
+      margin: 15px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #0055aa;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #003f88;
+    }
+
+    #mensagem {
+      margin-top: 20px;
+      font-weight: bold;
+      transition: all 0.3s ease-in-out;
+    }
+
+    a {
+      text-decoration: underline;
+      color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tela de início -->
+  <div id="video-start-screen">
+    <p>Clique para retirar o seu certificado</p>
+    <button onclick="startVideo()">Iniciar</button>
+  </div>
+
+  <!-- Vídeo de abertura -->
+  <video id="intro-video" playsinline>
+    <source src="vídeo/ExplicaçãoCertificado.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
+
+  <!-- Conteúdo principal -->
+  <div id="main-content">
+    <div class="container">
+      <h2>Digite seu Token</h2>
+      <input type="text" id="tokenInput" placeholder="Ex: A1B3C4">
+      <br>
+      <button onclick="verificarToken()">Verificar</button>
+      <p id="mensagem"></p>
+    </div>
+  </div>
+
+  <script>
+    const tokensValidos = {
+      "QLI6037": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "YXF4705": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "KQJ5676": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "FKO7910": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "LMZ8612": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "TCI7432": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "TYR7344": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "NDA7435": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "LFY9666": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "UUE2755": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "JHY0287": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "QZD5598": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "YNA2169": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "MDG6499": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "XIW4940": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "LIC6825": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "MQA8110": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "JZO5085": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "LNP7897": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "WQA7576": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "SBM9912": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "NXH9898": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "JZG8543": "https://drive.google.com/file/d/1GojsqubzS-RQ_JDPCUY82QYcj-kb3t5I/view?usp=sharing", //teste
+      "FAX0749": "https://seusite.com/certificados/FAX0749.pdf",
+      "LMI0824": "https://seusite.com/certificados/LMI0824.pdf",
+      "MTR0151": "https://seusite.com/certificados/MTR0151.pdf",
+      "VDQ5402": "https://seusite.com/certificados/VDQ5402.pdf",
+      "BIY8475": "https://seusite.com/certificados/BIY8475.pdf",
+      "DXL4804": "https://seusite.com/certificados/DXL4804.pdf",
+      "XRM1415": "https://seusite.com/certificados/XRM1415.pdf",
+      "UZB5654": "https://seusite.com/certificados/UZB5654.pdf",
+      "ZUG5879": "https://seusite.com/certificados/ZUG5879.pdf",
+      "DRJ1136": "https://seusite.com/certificados/DRJ1136.pdf",
+      "FIO8811": "https://seusite.com/certificados/FIO8811.pdf",
+      "VRB3207": "https://seusite.com/certificados/VRB3207.pdf",
+      "WGH7443": "https://seusite.com/certificados/WGH7443.pdf",
+      "WOF8727": "https://seusite.com/certificados/WOF8727.pdf",
+      "PMJ4359": "https://seusite.com/certificados/PMJ4359.pdf",
+      "XTR8136": "https://seusite.com/certificados/XTR8136.pdf",
+      "GDC8707": "https://seusite.com/certificados/GDC8707.pdf",
+      "TXU9037": "https://seusite.com/certificados/TXU9037.pdf",
+      "KER3015": "https://seusite.com/certificados/KER3015.pdf",
+      "ARB9630": "https://seusite.com/certificados/ARB9630.pdf",
+      "IGS3636": "https://seusite.com/certificados/IGS3636.pdf",
+      "MCU0098": "https://seusite.com/certificados/MCU0098.pdf",
+      "RYA9118": "https://seusite.com/certificados/RYA9118.pdf",
+      "UWL4776": "https://seusite.com/certificados/UWL4776.pdf",
+      "VMA8938": "https://seusite.com/certificados/VMA8938.pdf",
+      "APJ3142": "https://seusite.com/certificados/APJ3142.pdf",
+      "TDA9782": "https://seusite.com/certificados/TDA9782.pdf",
+      "MBF2678": "https://seusite.com/certificados/MBF2678.pdf",
+      "QPG4097": "https://seusite.com/certificados/QPG4097.pdf",
+      "JGT4435": "https://seusite.com/certificados/JGT4435.pdf",
+      "RTD5686": "https://seusite.com/certificados/RTD5686.pdf",
+      "DLU4073": "https://seusite.com/certificados/DLU4073.pdf",
+      "ELW2610": "https://seusite.com/certificados/ELW2610.pdf",
+      "EJY9594": "https://seusite.com/certificados/EJY9594.pdf",
+      "MYT5830": "https://seusite.com/certificados/MYT5830.pdf",
+      "NMH4853": "https://seusite.com/certificados/NMH4853.pdf",
+      "FXX8081": "https://seusite.com/certificados/FXX8081.pdf",
+      "FYK9394": "https://seusite.com/certificados/FYK9394.pdf",
+      "HWQ1353": "https://seusite.com/certificados/HWQ1353.pdf",
+      "CDJ8685": "https://seusite.com/certificados/CDJ8685.pdf",
+      "AIW0660": "https://seusite.com/certificados/AIW0660.pdf",
+      "CQI8345": "https://seusite.com/certificados/CQI8345.pdf",
+      "QNZ2646": "https://seusite.com/certificados/QNZ2646.pdf",
+      "CTD3672": "https://seusite.com/certificados/CTD3672.pdf",
+      "RSL2055": "https://seusite.com/certificados/RSL2055.pdf",
+      "WZF0588": "https://seusite.com/certificados/WZF0588.pdf",
+      "PJK2899": "https://seusite.com/certificados/PJK2899.pdf",
+      "QYW6629": "https://seusite.com/certificados/QYW6629.pdf",
+      "AUI3752": "https://seusite.com/certificados/AUI3752.pdf",
+      "XLG6059": "https://seusite.com/certificados/XLG6059.pdf",
+      "XEX4624": "https://seusite.com/certificados/XEX4624.pdf",
+      "OPK4662": "https://seusite.com/certificados/OPK4662.pdf",
+      "JKQ6896": "https://seusite.com/certificados/JKQ6896.pdf",
+      "SWE8638": "https://seusite.com/certificados/SWE8638.pdf",
+      "QXA6327": "https://seusite.com/certificados/QXA6327.pdf",
+      "BNZ0632": "https://seusite.com/certificados/BNZ0632.pdf",
+      "GTF7206": "https://seusite.com/certificados/GTF7206.pdf",
+      "SZA5069": "https://seusite.com/certificados/SZA5069.pdf",
+      "ZRO0820": "https://seusite.com/certificados/ZRO0820.pdf",
+      "NVM4052": "https://seusite.com/certificados/NVM4052.pdf",
+      "TQF6861": "https://seusite.com/certificados/TQF6861.pdf",
+      "WNU9533": "https://seusite.com/certificados/WNU9533.pdf",
+      "ZDP6292": "https://seusite.com/certificados/ZDP6292.pdf",
+      "WPO4860": "https://seusite.com/certificados/WPO4860.pdf",
+      "RIT4894": "https://seusite.com/certificados/RIT4894.pdf",
+      "PKR7125": "https://seusite.com/certificados/PKR7125.pdf",
+      "KIY4423": "https://seusite.com/certificados/KIY4423.pdf",
+      "PJF9147": "https://seusite.com/certificados/PJF9147.pdf",
+      "IEE8112": "https://seusite.com/certificados/IEE8112.pdf",
+      "MTF7435": "https://seusite.com/certificados/MTF7435.pdf",
+      "EGB3968": "https://seusite.com/certificados/EGB3968.pdf",
+      "ZLY4358": "https://seusite.com/certificados/ZLY4358.pdf",
+      "BBD2034": "https://seusite.com/certificados/BBD2034.pdf",
+      "GRY0191": "https://seusite.com/certificados/GRY0191.pdf",
+      "KUL7515": "https://seusite.com/certificados/KUL7515.pdf",
+      "DDE4507": "https://seusite.com/certificados/DDE4507.pdf",
+      "HQA8165": "https://seusite.com/certificados/HQA8165.pdf",
+      "GUX6038": "https://seusite.com/certificados/GUX6038.pdf",
+      "AKD0430": "https://seusite.com/certificados/AKD0430.pdf",
+      "UII3326": "https://seusite.com/certificados/UII3326.pdf",
+      "XQL7358": "https://seusite.com/certificados/XQL7358.pdf",
+      "XMI1413": "https://seusite.com/certificados/XMI1413.pdf",
+      "AAW5417": "https://seusite.com/certificados/AAW5417.pdf",
+      "MZW7276": "https://seusite.com/certificados/MZW7276.pdf",
+      "OSP2340": "https://seusite.com/certificados/OSP2340.pdf",
+      "MQB0242": "https://seusite.com/certificados/MQB0242.pdf",
+      "YXL5421": "https://seusite.com/certificados/YXL5421.pdf",
+      "VUY8085": "https://seusite.com/certificados/VUY8085.pdf",
+      "NEA8729": "https://seusite.com/certificados/NEA8729.pdf",
+      "TKK6344": "https://seusite.com/certificados/TKK6344.pdf",
+      "OBE4249": "https://seusite.com/certificados/OBE4249.pdf",
+      "LKC8415": "https://seusite.com/certificados/LKC8415.pdf",
+      "NEM7070": "https://seusite.com/certificados/NEM7070.pdf",
+      "QMD6421": "https://seusite.com/certificados/QMD6421.pdf",
+      "JIC5386": "https://seusite.com/certificados/JIC5386.pdf",
+      "POU0081": "https://seusite.com/certificados/POU0081.pdf",
+      "FVA1020": "https://seusite.com/certificados/FVA1020.pdf",
+      "JWJ9582": "https://seusite.com/certificados/JWJ9582.pdf",
+      "CFB9308": "https://seusite.com/certificados/CFB9308.pdf",
+      "IMN9398": "https://seusite.com/certificados/IMN9398.pdf",
+      "PQD1829": "https://seusite.com/certificados/PQD1829.pdf",
+      "KHW2469": "https://seusite.com/certificados/KHW2469.pdf",
+      "MGP0088": "https://seusite.com/certificados/MGP0088.pdf",
+      "BJM3320": "https://seusite.com/certificados/BJM3320.pdf",
+      "YGX2388": "https://seusite.com/certificados/YGX2388.pdf",
+      "EMK5077": "https://seusite.com/certificados/EMK5077.pdf",
+      "DUE5320": "https://seusite.com/certificados/DUE5320.pdf",
+      "UIP5956": "https://seusite.com/certificados/UIP5956.pdf",
+      "TPV3616": "https://seusite.com/certificados/TPV3616.pdf",
+      "QKZ9228": "https://seusite.com/certificados/QKZ9228.pdf",
+      "XDA7564": "https://seusite.com/certificados/XDA7564.pdf",
+      "NFB7294": "https://seusite.com/certificados/NFB7294.pdf",
+      "WTF7380": "https://seusite.com/certificados/WTF7380.pdf",
+      "WYW5359": "https://seusite.com/certificados/WYW5359.pdf",
+      "YON0451": "https://seusite.com/certificados/YON0451.pdf",
+      "WGY8991": "https://seusite.com/certificados/WGY8991.pdf",
+      "PQE1302": "https://seusite.com/certificados/PQE1302.pdf",
+      "XBW1206": "https://seusite.com/certificados/XBW1206.pdf",
+      "IMM8611": "https://seusite.com/certificados/IMM8611.pdf",
+      "OTD3306": "https://seusite.com/certificados/OTD3306.pdf",
+      "IPG3938": "https://seusite.com/certificados/IPG3938.pdf",
+      "MKP1565": "https://seusite.com/certificados/MKP1565.pdf",
+      "EQQ7210": "https://seusite.com/certificados/EQQ7210.pdf",
+      "YWL1101": "https://seusite.com/certificados/YWL1101.pdf",
+      "AMC6193": "https://seusite.com/certificados/AMC6193.pdf",
+      "OHN5358": "https://seusite.com/certificados/OHN5358.pdf",
+      "JFX4259": "https://seusite.com/certificados/JFX4259.pdf",
+      "QAI3500": "https://seusite.com/certificados/QAI3500.pdf",
+      "OSS4775": "https://seusite.com/certificados/OSS4775.pdf",
+      "VQE1530": "https://seusite.com/certificados/VQE1530.pdf",
+      "ZTF1438": "https://seusite.com/certificados/ZTF1438.pdf",
+      "HXD8847": "https://seusite.com/certificados/HXD8847.pdf",
+      "KMC3768": "https://seusite.com/certificados/KMC3768.pdf",
+      "KIM0407": "https://seusite.com/certificados/KIM0407.pdf",
+      "OCY1798": "https://seusite.com/certificados/OCY1798.pdf",
+      "IAD4694": "https://seusite.com/certificados/IAD4694.pdf",
+      "BOU1334": "https://seusite.com/certificados/BOU1334.pdf",
+      "YGU9264": "https://seusite.com/certificados/YGU9264.pdf",
+      "NTS0913": "https://seusite.com/certificados/NTS0913.pdf",
+      "IQP4494": "https://seusite.com/certificados/IQP4494.pdf",
+      "BAU6805": "https://seusite.com/certificados/BAU6805.pdf",
+      "GGB2754": "https://seusite.com/certificados/GGB2754.pdf",
+      "CXL9742": "https://seusite.com/certificados/CXL9742.pdf",
+      "HMA4747": "https://seusite.com/certificados/HMA4747.pdf",
+      "UFF7746": "https://seusite.com/certificados/UFF7746.pdf",
+      "YUG7069": "https://seusite.com/certificados/YUG7069.pdf",
+      "RPT8618": "https://seusite.com/certificados/RPT8618.pdf",
+      "TCB2597": "https://seusite.com/certificados/TCB2597.pdf",
+      "TBP7999": "https://seusite.com/certificados/TBP7999.pdf",
+      "SCC9312": "https://seusite.com/certificados/SCC9312.pdf",
+      "JGH2569": "https://seusite.com/certificados/JGH2569.pdf",
+      "RSG9128": "https://seusite.com/certificados/RSG9128.pdf",
+      "WXG2476": "https://seusite.com/certificados/WXG2476.pdf",
+      "YUK2003": "https://seusite.com/certificados/YUK2003.pdf",
+      "UNS0736": "https://seusite.com/certificados/UNS0736.pdf",
+      "IQQ3967": "https://seusite.com/certificados/IQQ3967.pdf",
+      "OTG2958": "https://seusite.com/certificados/OTG2958.pdf",
+      "LRY7973": "https://seusite.com/certificados/LRY7973.pdf",
+      "MAX5051": "https://seusite.com/certificados/MAX5051.pdf",
+      "CPS6604": "https://seusite.com/certificados/CPS6604.pdf",
+      "DDN5901": "https://seusite.com/certificados/DDN5901.pdf",
+      "PEW3956": "https://seusite.com/certificados/PEW3956.pdf",
+      "RYL5961": "https://seusite.com/certificados/RYL5961.pdf",
+      "GVO8304": "https://seusite.com/certificados/GVO8304.pdf",
+      "POQ5777": "https://seusite.com/certificados/POQ5777.pdf",
+      "PTH3757": "https://seusite.com/certificados/PTH3757.pdf",
+      "RPZ7964": "https://seusite.com/certificados/RPZ7964.pdf",
+      "RCN9055": "https://seusite.com/certificados/RCN9055.pdf",
+      "IMP9699": "https://seusite.com/certificados/IMP9699.pdf",
+      "QPM8715": "https://seusite.com/certificados/QPM8715.pdf",
+      "BGI9257": "https://seusite.com/certificados/BGI9257.pdf",
+      "NNA8034": "https://seusite.com/certificados/NNA8034.pdf",
+      "CKR2335": "https://seusite.com/certificados/CKR2335.pdf",
+      "FGO2547": "https://seusite.com/certificados/FGO2547.pdf",
+      "DLN1938": "https://seusite.com/certificados/DLN1938.pdf",
+      "RSW9499": "https://seusite.com/certificados/RSW9499.pdf",
+      "UBF6286": "https://seusite.com/certificados/UBF6286.pdf",
+      "HDM6340": "https://seusite.com/certificados/HDM6340.pdf",
+      "DAZ1739": "https://seusite.com/certificados/DAZ1739.pdf",
+      "CPY5950": "https://seusite.com/certificados/CPY5950.pdf",
+      "VDP2589": "https://seusite.com/certificados/VDP2589.pdf",
+      "AAX7678": "https://seusite.com/certificados/AAX7678.pdf",
+      "DXN7614": "https://seusite.com/certificados/DXN7614.pdf",
+      "LGI7242": "https://seusite.com/certificados/LGI7242.pdf",
+      "UUH6246": "https://seusite.com/certificados/UUH6246.pdf",
+      "KZW5838": "https://seusite.com/certificados/KZW5838.pdf",
+      "TNF0529": "https://seusite.com/certificados/TNF0529.pdf",
+      "OLA2508": "https://seusite.com/certificados/OLA2508.pdf",
+      "GYN7481": "https://seusite.com/certificados/GYN7481.pdf",
+      "EQE4494": "https://seusite.com/certificados/EQE4494.pdf",
+      "SEY9645": "https://seusite.com/certificados/SEY9645.pdf",
+      "NAI0642": "https://seusite.com/certificados/NAI0642.pdf",
+      "QWP3931": "https://seusite.com/certificados/QWP3931.pdf",
+      "LRH1485": "https://seusite.com/certificados/LRH1485.pdf",
+      "HHE5889": "https://seusite.com/certificados/HHE5889.pdf",
+      "LQI0923": "https://seusite.com/certificados/LQI0923.pdf",
+      "OYR7474": "https://seusite.com/certificados/OYR7474.pdf",
+      "ZST8722": "https://seusite.com/certificados/ZST8722.pdf",
+      "NRF6070": "https://seusite.com/certificados/NRF6070.pdf",
+      "MYM0994": "https://seusite.com/certificados/MYM0994.pdf",
+      "MXO8980": "https://seusite.com/certificados/MXO8980.pdf",
+      "LRC7738": "https://seusite.com/certificados/LRC7738.pdf",
+      "LHI1974": "https://seusite.com/certificados/LHI1974.pdf",
+      "KPF0110": "https://seusite.com/certificados/KPF0110.pdf",
+      "QTR0874": "https://seusite.com/certificados/QTR0874.pdf",
+      "TPL9483": "https://seusite.com/certificados/TPL9483.pdf",
+      "NKQ1717": "https://seusite.com/certificados/NKQ1717.pdf",
+      "DMR1448": "https://seusite.com/certificados/DMR1448.pdf",
+      "HIG1385": "https://seusite.com/certificados/HIG1385.pdf",
+      "ENK6370": "https://seusite.com/certificados/ENK6370.pdf",
+      "KTF2027": "https://seusite.com/certificados/KTF2027.pdf",
+      "WRO4973": "https://seusite.com/certificados/WRO4973.pdf",
+      "XYY4299": "https://seusite.com/certificados/XYY4299.pdf",
+      "XLM7188": "https://seusite.com/certificados/XLM7188.pdf",
+      "ZYT5720": "https://seusite.com/certificados/ZYT5720.pdf",
+      "TAD5283": "https://seusite.com/certificados/TAD5283.pdf",
+      "YWW8092": "https://seusite.com/certificados/YWW8092.pdf",
+      "YHW4376": "https://seusite.com/certificados/YHW4376.pdf",
+      "AWS7694": "https://seusite.com/certificados/AWS7694.pdf",
+      "YJQ9703": "https://seusite.com/certificados/YJQ9703.pdf",
+      "WSR9262": "https://seusite.com/certificados/WSR9262.pdf",
+      "YWP9363": "https://seusite.com/certificados/YWP9363.pdf",
+      "INL9904": "https://seusite.com/certificados/INL9904.pdf",
+      "VSF0013": "https://seusite.com/certificados/VSF0013.pdf",
+      "KYG2955": "https://seusite.com/certificados/KYG2955.pdf",
+      "ONH2277": "https://seusite.com/certificados/ONH2277.pdf",
+      "LSD5170": "https://seusite.com/certificados/LSD5170.pdf",
+      "ASE9258": "https://seusite.com/certificados/ASE9258.pdf",
+      "HHU3265": "https://seusite.com/certificados/HHU3265.pdf",
+      "PKP6987": "https://seusite.com/certificados/PKP6987.pdf",
+      "MOA4942": "https://seusite.com/certificados/MOA4942.pdf",
+      "HEX5336": "https://seusite.com/certificados/HEX5336.pdf",
+      "ASO1976": "https://seusite.com/certificados/ASO1976.pdf",
+      "KIL6007": "https://seusite.com/certificados/KIL6007.pdf",
+      "KLC6084": "https://seusite.com/certificados/KLC6084.pdf",
+      "RVH6629": "https://seusite.com/certificados/RVH6629.pdf",
+      "AHH6963": "https://seusite.com/certificados/AHH6963.pdf",
+      "POV5224": "https://seusite.com/certificados/POV5224.pdf",
+      "EAQ6246": "https://seusite.com/certificados/EAQ6246.pdf",
+      "TAZ1894": "https://seusite.com/certificados/TAZ1894.pdf",
+      "KHP9480": "https://seusite.com/certificados/KHP9480.pdf",
+      "PDP0211": "https://seusite.com/certificados/PDP0211.pdf",
+      "XTY9031": "https://seusite.com/certificados/XTY9031.pdf",
+      "VWW1666": "https://seusite.com/certificados/VWW1666.pdf",
+      "VLO3318": "https://seusite.com/certificados/VLO3318.pdf",
+      "RGX9954": "https://seusite.com/certificados/RGX9954.pdf",
+      "RPS4219": "https://seusite.com/certificados/RPS4219.pdf",
+      "QFH0309": "https://seusite.com/certificados/QFH0309.pdf",
+      "FCY4611": "https://seusite.com/certificados/FCY4611.pdf",
+      "RCL5830": "https://seusite.com/certificados/RCL5830.pdf",
+      "DTX5454": "https://seusite.com/certificados/DTX5454.pdf",
+      "IAF4461": "https://seusite.com/certificados/IAF4461.pdf",
+      "EAL5199": "https://seusite.com/certificados/EAL5199.pdf",
+      "CWX7458": "https://seusite.com/certificados/CWX7458.pdf",
+      "EKG8193": "https://seusite.com/certificados/EKG8193.pdf",
+      "BSN7246": "https://seusite.com/certificados/BSN7246.pdf",
+      "CDD9877": "https://seusite.com/certificados/CDD9877.pdf",
+      "JSS6619": "https://seusite.com/certificados/JSS6619.pdf",
+      "ENY8854": "https://seusite.com/certificados/ENY8854.pdf",
+      "COR2204": "https://seusite.com/certificados/COR2204.pdf",
+      "YMB1105": "https://seusite.com/certificados/YMB1105.pdf",
+      "WQH2589": "https://seusite.com/certificados/WQH2589.pdf",
+      "CDY9135": "https://seusite.com/certificados/CDY9135.pdf",
+      "NSX3440": "https://seusite.com/certificados/NSX3440.pdf",
+      "WHW2443": "https://seusite.com/certificados/WHW2443.pdf",
+      "DTR5686": "https://seusite.com/certificados/DTR5686.pdf",
+      "EOG7691": "https://seusite.com/certificados/EOG7691.pdf",
+      "YPC4669": "https://seusite.com/certificados/YPC4669.pdf",
+      "EKW7478": "https://seusite.com/certificados/EKW7478.pdf",
+      "MBZ7354": "https://seusite.com/certificados/MBZ7354.pdf",
+      "FLF9665": "https://seusite.com/certificados/FLF9665.pdf",
+      "EYP9089": "https://seusite.com/certificados/EYP9089.pdf",
+      "CAV7760": "https://seusite.com/certificados/CAV7760.pdf",
+      "EMC1333": "https://seusite.com/certificados/EMC1333.pdf",
+      "PCB8374": "https://seusite.com/certificados/PCB8374.pdf",
+      "UOF9600": "https://seusite.com/certificados/UOF9600.pdf",
+      "PLQ4589": "https://seusite.com/certificados/PLQ4589.pdf",
+      "HHV2652": "https://seusite.com/certificados/HHV2652.pdf",
+      "QZD1291": "https://seusite.com/certificados/QZD1291.pdf",
+      "BPC5596": "https://seusite.com/certificados/BPC5596.pdf",
+      "CMY0827": "https://seusite.com/certificados/CMY0827.pdf",
+      "BDP7840": "https://seusite.com/certificados/BDP7840.pdf",
+      "ZQM2584": "https://seusite.com/certificados/ZQM2584.pdf",
+      "YYR5906": "https://seusite.com/certificados/YYR5906.pdf",
+      "XDG9483": "https://seusite.com/certificados/XDG9483.pdf",
+      "NJK6827": "https://seusite.com/certificados/NJK6827.pdf",
+      "VWU8078": "https://seusite.com/certificados/VWU8078.pdf",
+      "JFJ8394": "https://seusite.com/certificados/JFJ8394.pdf",
+      "RKL6173": "https://seusite.com/certificados/RKL6173.pdf",
+      "MZN2731": "https://seusite.com/certificados/MZN2731.pdf",
+      "OOB0863": "https://seusite.com/certificados/OOB0863.pdf",
+      "UAF2090": "https://seusite.com/certificados/UAF2090.pdf",
+      "MQO8901": "https://seusite.com/certificados/MQO8901.pdf",
+      "UAH8805": "https://seusite.com/certificados/UAH8805.pdf",
+      "PKG5822": "https://seusite.com/certificados/PKG5822.pdf",
+      "DQB0799": "https://seusite.com/certificados/DQB0799.pdf",
+      "LFS4805": "https://seusite.com/certificados/LFS4805.pdf",
+      "MRV2756": "https://seusite.com/certificados/MRV2756.pdf",
+      "RDE9807": "https://seusite.com/certificados/RDE9807.pdf",
+      "RKB3814": "https://seusite.com/certificados/RKB3814.pdf",
+      "CBY4355": "https://seusite.com/certificados/CBY4355.pdf",
+      "VOP4485": "https://seusite.com/certificados/VOP4485.pdf"
+
+
+
+    };
+
+    function verificarToken() {
+      const input = document.getElementById("tokenInput").value.trim().toUpperCase();
+      const mensagem = document.getElementById("mensagem");
+
+      if (tokensValidos[input]) {
+        mensagem.style.color = "green";
+        mensagem.innerHTML = `✅ Token correto!<br><a href="${tokensValidos[input]}" target="_blank">Clique aqui para baixar seu certificado</a>`;
+        window.open(tokensValidos[input], "_blank");
+      } else {
+        mensagem.style.color = "red";
+        mensagem.textContent = "❌ Token inexistente.";
+      }
+    }
+
+    function startVideo() {
+      const startScreen = document.getElementById("video-start-screen");
+      const video = document.getElementById("intro-video");
+      const mainContent = document.getElementById("main-content");
+
+      startScreen.style.display = "none";
+      video.style.display = "block";
+      video.play();
+
+      video.addEventListener("ended", () => {
+        video.style.display = "none";
+        mainContent.style.display = "block";
+      });
+    }
+  </script>
+
+</body>
+</html>
